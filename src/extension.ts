@@ -1,15 +1,15 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import modelParsing from './parsing/modelParsing';
 
 const chan = vscode.window.createOutputChannel('Automate Flux')
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {vscode.window.showInformationMessage('Hello World from Automate Flux Architecture!');
-// vscode.workspace.createFileSystemWatcher()
+export function activate(context: vscode.ExtensionContext) {
+	vscode.window.showInformationMessage('Hello World from Automate Flux Architecture!');
+	// vscode.workspace.createFileSystemWatcher()
 
-
-chan.appendLine(vscode.window.activeTextEditor?.selection.active.line.toString()!)
 
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
@@ -28,17 +28,22 @@ chan.appendLine(vscode.window.activeTextEditor?.selection.active.line.toString()
 			const document = editor.document;
 			const selection = editor.selection;
 
-			// Get the word within the selection
-			const word = document.getText(selection);
-			const reversed = word.split('').reverse().join('');
-			editor.edit(editBuilder => {
-				editBuilder.replace(selection, reversed);
-			});
+			if (!selection) {
+				console.log("HERE")
+				vscode.window.showErrorMessage('You have to select a model')
+				return
+			}
+
+			const model = document.getText(selection)
+
+			const parsedModel = modelParsing(model)
+
+			console.log(parsedModel)
 		}
-	});
+	})
 
 	context.subscriptions.push(disposable);
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() { }
