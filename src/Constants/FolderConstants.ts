@@ -1,0 +1,5 @@
+export const ActionCreatorsFolder = "ActionCreators"
+export const ActionTypes = "ActionTypes"
+export const Sagas = "Sagas"
+export const Reducers = "Reducers"
+export const Services = "Services"
