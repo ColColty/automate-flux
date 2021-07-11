@@ -1,5 +1,13 @@
 export const ActionCreatorsFolder = "ActionCreators"
-export const ActionTypes = "ActionTypes"
-export const Sagas = "Sagas"
-export const Reducers = "Reducers"
-export const Services = "Services"
+export const ActionTypesFolder = "ActionTypes"
+export const SagasFolder = "Sagas"
+export const ReducersFolder = "Reducers"
+export const ServicesFolder = "Services"
+
+export const requiredFolders = [
+    ActionCreatorsFolder,
+    ActionTypesFolder,
+    SagasFolder,
+    ReducersFolder,
+    ServicesFolder
+]
