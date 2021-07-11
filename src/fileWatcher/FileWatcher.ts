@@ -3,14 +3,16 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { requiredFolders } from '../Constants/FolderConstants';
 import { baseFileWatch } from '../Constants/Constants';
+import FluxController from '../Controllers/FluxController';
+import fluxControllerFactory from '../Controllers/FluxControllerFactory';
 
 class FileWatcher {
-    private requiredDirsMapped: Map<string, string>;
+    private requiredDirsMapped: Map<string, FluxController>;
     private basePath: string;
 
     constructor() {
         this.basePath = ""
-        this.requiredDirsMapped = new Map<string, string>()
+        this.requiredDirsMapped = new Map<string, FluxController>()
 
         this.findFolders()
     }
@@ -32,9 +34,13 @@ class FileWatcher {
                             fs.mkdir(folderPath, (err) => {
                                 if (err) throw err
 
-                                this.requiredDirsMapped.set(folder, folderPath)
+                                const controller = fluxControllerFactory(folder, folderPath)
 
-                                vscode.window.showInformationMessage(`Automate-flux create folder: ${folder}`)
+                                if (controller) {
+                                    this.requiredDirsMapped.set(folder, controller)
+
+                                    vscode.window.showInformationMessage(`Automate-flux create folder: ${folder}`)
+                                }
                             })
                         } else {
                             const dirStat = fs.statSync(folderPath)
@@ -43,7 +49,11 @@ class FileWatcher {
                                 throw new Error('Required folder name used as file: ' + folder)
                             }
 
-                            this.requiredDirsMapped.set(folder, folderPath)
+                            const controller = fluxControllerFactory(folder, folderPath)
+
+                            if (controller) {
+                                this.requiredDirsMapped.set(folder, controller)
+                            }
                         }
                     })
                 }
@@ -53,7 +63,7 @@ class FileWatcher {
         vscode.window.showInformationMessage('All folders found !')
     }
 
-    public getFolderPath(name: string): string | undefined {
+    public getFolderPath(name: string): FluxController | undefined {
         return this.requiredDirsMapped.get(name)
     }
 }
