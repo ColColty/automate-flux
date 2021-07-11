@@ -7,7 +7,7 @@ export default class ActionCreatorController extends FluxController {
         super(ActionCreatorsFolder, filePath)
     }
 
-    public newFile(modelName: string): number {
-        return super.createFile(modelName, fileNameExtension)
+    public createFile(modelName: string, fluxExtension: string = fileNameExtension): number {
+        return super.createFile(modelName, fluxExtension)
     }
 }

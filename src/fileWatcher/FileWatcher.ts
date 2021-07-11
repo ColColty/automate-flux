@@ -66,6 +66,10 @@ class FileWatcher {
     public getFolderPath(name: string): FluxController | undefined {
         return this.requiredDirsMapped.get(name)
     }
+
+    public getFolderPaths(): Map<string, FluxController> {
+        return this.requiredDirsMapped
+    }
 }
 
 export default FileWatcher

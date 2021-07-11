@@ -4,6 +4,7 @@ import * as vscode from 'vscode';
 import ActionTypeController from './Controllers/ActionTypeController';
 import FileWatcher from './fileWatcher/FileWatcher';
 import fileWatcher from './fileWatcher/FileWatcher';
+import fluxCreator from './fluxCreator';
 import modelParsing from './parsing/modelParsing';
 
 const chan = vscode.window.createOutputChannel('Automate Flux')
@@ -26,8 +27,7 @@ export function activate(context: vscode.ExtensionContext) {
 			const selection = editor.selection;
 
 			if (!selection) {
-				console.log("HERE")
-				vscode.window.showErrorMessage('You have to select a model')
+				vscode.window.showInformationMessage('You have to select a model')
 				return
 			}
 
@@ -35,7 +35,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 			const parsedModel = modelParsing(model)
 
-			console.log(parsedModel)
+			fluxCreator(fileWatcher, parsedModel)
 		}
 	})
 

@@ -11,7 +11,7 @@ export default abstract class FluxController {
         this.folderPath = folderPath
     }
 
-    protected createFile(modelName: string, fluxExtension: string): number {
+    public createFile(modelName: string, fluxExtension: string): number {
         const filename = toCamelCase(modelName) + fluxExtension + ".ts"
         const filePath = path.join(this.folderPath, filename)
 
@@ -20,7 +20,7 @@ export default abstract class FluxController {
         return fd
     }
 
-    protected appendFile(fd: number, content: string) {
-        // TODO Append to file
-    }
+    // public appendFile(fd: number, content: string) {
+    //     // TODO Append to file
+    // }
 }
