@@ -49,6 +49,8 @@ class FileWatcher {
                 }
             }
         })
+
+        vscode.window.showInformationMessage('All folders found !')
     }
 
     public getFolderPath(name: string): string | undefined {

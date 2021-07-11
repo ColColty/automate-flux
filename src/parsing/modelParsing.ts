@@ -20,7 +20,7 @@ export default function modelParsing(model: string): ParsedModel {
     }
 
     let interfaceOptions: ParsedProperty[] = []
-    const elRe = new RegExp(/(\w+): *(\w+)/)
+    const elRe = new RegExp(/(\w+)(\?)?: *(\w+)/)
 
     modelArr.forEach(el => {
         const elReRes = elRe.exec(el)
@@ -28,7 +28,8 @@ export default function modelParsing(model: string): ParsedModel {
         if (elReRes) {
             const parsedProperty: ParsedProperty = {
                 name: elReRes[1],
-                type: elReRes[2]
+                type: elReRes[3],
+                optional: elReRes[2] ? true : false
             }
 
             interfaceOptions.push(parsedProperty)
