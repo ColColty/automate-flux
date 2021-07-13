@@ -14,7 +14,11 @@ class FileWatcher {
         this.basePath = ""
         this.requiredDirsMapped = new Map<string, FluxController>()
 
-        this.findFolders()
+        try {
+            this.findFolders()
+        } catch (err) {
+            vscode.window.showInformationMessage(err)
+        }
     }
 
     public findFolders() {
