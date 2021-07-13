@@ -18,7 +18,7 @@ export const ActionTypeContent = (modelName: string, actionType: string, propert
     const actionTypeName = `${toCamelCase(actionTypeVarName.toLowerCase())}Action`
 
     const actionTypeLine = `export const ${actionTypeVarName} = '${ModelActionType(modelName, actionType, isSuccess)}'`
-    const actionInterfaceLine = `export interface ${actionTypeName} {\n    type: typeof ${actionTypeVarName}\n${propertiesToInterface(properties)}\n}\n`
+    const actionInterfaceLine = `export interface ${actionTypeName} {\n    type: typeof ${actionTypeVarName}\n${propertiesToInterface(properties)}\n}`
 
     return {
         content: `${actionTypeLine}\n${actionInterfaceLine}\n`,

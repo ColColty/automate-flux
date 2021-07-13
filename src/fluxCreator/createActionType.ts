@@ -27,7 +27,7 @@ function fillFile(parsedModel: ParsedModel, actionName: string, fd: number) {
     const exportTypes = exportActionTypes(parsedModel.interfaceName, actionTypeNames, false)
     lines.push(exportTypes)
 
-    fs.appendFileSync(fd, lines.join('\n'))
+    fs.appendFileSync(fd, lines.join('\n') + '\n')
 }
 
 export default function createActionType(actionTypeController: ActionTypeController, parsedModel: ParsedModel) {
