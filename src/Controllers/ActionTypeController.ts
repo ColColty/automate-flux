@@ -20,7 +20,7 @@ export default class ActionTypeController extends FluxController {
     }
 
     public addActionType(modelName: string, actionType: string, properties: ParsedProperty[], isSuccess?: boolean) {
-        const actionTypeVarName = actionType.toUpperCase().replace(" ", "_") + (isSuccess !== undefined ? (isSuccess ? SuccessAppendType : FailureAppendType) : '')
+        const actionTypeVarName = actionType.toUpperCase().replace(/\s/g, "_") + (isSuccess !== undefined ? (isSuccess ? SuccessAppendType : FailureAppendType) : '')
 
         const actionTypeName = `${toCamelCase(actionTypeVarName.toLowerCase())}Action`
 
