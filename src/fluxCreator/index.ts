@@ -26,7 +26,7 @@ export default function fluxCreator(fileWatcher: FileWatcher, parsedModel: Parse
         fileWatcher.getFolderPaths().forEach((val, key) => {
             switch (val.constructor) {
                 case ActionTypeController:
-                    createActionType(val, parsedModel)
+                    createActionType(<ActionTypeController>val, parsedModel)
                     break;
                 case ActionCreatorController:
                     break;
