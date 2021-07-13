@@ -11,17 +11,17 @@ const chan = vscode.window.createOutputChannel('Automate Flux')
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-	const fileWatcher = new FileWatcher()
-
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
+	const fileWatcher = new FileWatcher()
+
 	let generateFlux = vscode.commands.registerCommand('automate-flux.generate-flux', () => {
 		// The code you place here will be executed every time your command is executed
 		// Display a message box to the user
 
 		const editor = vscode.window.activeTextEditor
-
+console.log(editor)
 		if (editor) {
 			const document = editor.document;
 			const selection = editor.selection;
@@ -32,14 +32,15 @@ export function activate(context: vscode.ExtensionContext) {
 			}
 
 			const model = document.getText(selection)
-
+console.log(model)
 			const parsedModel = modelParsing(model)
-
+console.log(parsedModel, fileWatcher)
 			fluxCreator(fileWatcher, parsedModel)
 		}
 	})
 
 	let generateActions = vscode.commands.registerCommand('automate-flux.generate-action', () => {
+		// const fileWatcher = new FileWatcher()
 		vscode.window.showInputBox()
 	})
 

@@ -3,6 +3,7 @@ import { ActionCreatorsFolder } from "../Constants/FolderConstants";
 import FluxController from "./FluxController";
 
 export default class ActionCreatorController extends FluxController {
+
     constructor(filePath: string) {
         super(ActionCreatorsFolder, filePath)
     }
