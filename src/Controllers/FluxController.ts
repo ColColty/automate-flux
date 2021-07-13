@@ -1,6 +1,6 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import { toCamelCase } from '../Utils/utils';
+import { capitalize, toCamelCase } from '../Utils/utils';
 
 export default abstract class FluxController {
     protected folderName: string;
@@ -12,10 +12,10 @@ export default abstract class FluxController {
     }
 
     public createFile(modelName: string, fluxExtension: string): number {
-        const filename = toCamelCase(modelName) + fluxExtension + ".ts"
+        const filename = capitalize(toCamelCase(modelName)) + fluxExtension + ".ts"
         const filePath = path.join(this.folderPath, filename)
 
-        const fd = fs.openSync(filePath, 'w')
+        const fd = fs.openSync(filePath, 'a+')
 
         return fd
     }

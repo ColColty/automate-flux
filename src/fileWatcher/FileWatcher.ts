@@ -31,17 +31,18 @@ class FileWatcher {
                         const folderPath = path.join(this.basePath, folder)
 
                         if (!dir.includes(folder)) {
-                            fs.mkdir(folderPath, (err) => {
-                                if (err) throw err
+                            // TODO Ask to the user if he want to create the related folders
+                            // fs.mkdir(folderPath, (err) => {
+                            //     if (err) throw err
 
-                                const controller = fluxControllerFactory(folder, folderPath)
+                            //     const controller = fluxControllerFactory(folder, folderPath)
 
-                                if (controller) {
-                                    this.requiredDirsMapped.set(folder, controller)
+                            //     if (controller) {
+                            //         this.requiredDirsMapped.set(folder, controller)
 
-                                    vscode.window.showInformationMessage(`Automate-flux create folder: ${folder}`)
-                                }
-                            })
+                            //         vscode.window.showInformationMessage(`Automate-flux create folder: ${folder}`)
+                            //     }
+                            // })
                         } else {
                             const dirStat = fs.statSync(folderPath)
 
