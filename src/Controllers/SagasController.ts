@@ -1,8 +1,6 @@
-import { closeSync, openSync, readFileSync, writeFileSync } from 'fs'
-import { join } from 'path'
+import { readFileSync, writeFileSync } from 'fs'
 import { SagasFolder } from '../Constants/FolderConstants'
-import { fileNameExtension, rootFileName } from '../Constants/SagasConstants'
-import FileWatcher from '../fileWatcher/FileWatcher'
+import { fileNameExtension } from '../Constants/SagasConstants'
 import ParsedProperty from '../Models/ParsedProperty'
 import {
     capitalize,
@@ -118,7 +116,7 @@ export default class SagasController extends AbstractFluxController {
         let inSagaYields = false
 
         rootLines = rootLines.map((el) => {
-            if (el.match(/^function\* watchOn(\w+)\(\) \{\n$/)) {
+            if (el.match(/^function\* watchOn(\w+)\(\) \{$/)) {
                 return sagaFunction + '\n' + el
             }
 
@@ -140,11 +138,11 @@ export default class SagasController extends AbstractFluxController {
         return `        fork(${this.sagaMainFunction})`
     }
 
-    public generateSagaRootFile(): void {
-        const fdRoot = this.createFile(rootFileName)
-
+    public generateSagaRootFile(fdRoot: number): void {
         const importSaga = 'import { all, fork } from \'redux-saga/effects\''
-        const importSagaWatcher = `import ${this.sagaMainFunction} from './${this.fileName}'`
+        const importSagaWatcher = `import ${
+            this.sagaMainFunction
+        } from './${this.fileName.replace('.ts', '')}'`
         const imports = [importSaga, importSagaWatcher].join('\n')
 
         const rootFunction = `export default function* rootSaga() {\n    yield all([\n${this.generateSagaWatchRootAppend()}\n    ])\n}`
@@ -154,31 +152,19 @@ export default class SagasController extends AbstractFluxController {
         this.writeFile(fdRoot, content)
     }
 
-    public appendRootFile(fileWatcher: FileWatcher): void {
-        const sagaFolder = fileWatcher.getFolderPath(SagasFolder)
-
-        if (!sagaFolder) {
-            return
-        }
-        const fd = openSync(
-            join(
-                sagaFolder.getFolderPath(),
-                rootFileName + fileNameExtension + '.ts'
-            ),
-            'w+'
-        )
-
+    public appendRootFile(fd: number): void {
         let rootLines = readFileSync(fd).toString().split('\n')
         let inImport = false
 
         rootLines = rootLines.map((el) => {
-            if (el.match(/^ {4}\]\)\n$/)) {
+            if (el.match(/^ {4}\]\)$/)) {
                 return this.generateSagaWatchRootAppend() + '\n' + el
             }
 
             if (el.match(/^import /)) {
                 inImport = true
             } else if (inImport) {
+                inImport = false
                 return (
                     `import ${this.sagaMainFunction} from './${this.fileName}'` +
                     '\n' +
@@ -189,7 +175,5 @@ export default class SagasController extends AbstractFluxController {
         })
 
         writeFileSync(fd, rootLines.join('\n'))
-
-        closeSync(fd)
     }
 }

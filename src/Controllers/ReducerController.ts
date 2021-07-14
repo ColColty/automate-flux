@@ -1,3 +1,4 @@
+import { readFileSync, writeFileSync } from 'fs'
 import { ReducersFolder } from '../Constants/FolderConstants'
 import { fileNameExtension } from '../Constants/ReducerConstants'
 import ParsedProperty from '../Models/ParsedProperty'
@@ -91,5 +92,64 @@ export default class ReducerController extends AbstractFluxController {
         )}\n        }\n`
 
         return reducerContent
+    }
+
+    public appendReducers(fd: number, reducers: string[]): void {
+        let rootLines = readFileSync(fd).toString().split('\n')
+
+        rootLines = rootLines.map((el) => {
+            if (el.match(/^ {4}default:$/)) {
+                return reducers.join('\n') + '\n' + el
+            }
+
+            return el
+        })
+
+        this.writeFile(fd, rootLines.join('\n'))
+    }
+
+    public generateReducerRootCombiner(modelName: string): string {
+        return `    ${modelName}: ${this.reducerName},`
+    }
+
+    public generateRootFile(fdRoot: number, modelName: string): void {
+        const importRedux = 'import { combineReducers } from \'redux\''
+        const importReducer = `import ${
+            this.reducerName
+        } from './${this.fileName.replace('.ts', '')}`
+        const imports = [importRedux, importReducer].join('\n')
+
+        const rootReducerFunction = `const RootReducer = combineReducers({\n${this.generateReducerRootCombiner(
+            modelName
+        )}\n})\n\nexport type AppState = ReturnType<typeof RootReducer>\n\nexport default RootReducer\n`
+
+        this.writeFile(fdRoot, [imports, rootReducerFunction].join('\n'))
+    }
+
+    public appendRootFile(fdRoot: number, modelName: string): void {
+        let rootLines = readFileSync(fdRoot).toString().split('\n')
+        let inImport = false
+
+        rootLines = rootLines.map((el) => {
+            if (el.match(/^\}\)$/)) {
+                return this.generateReducerRootCombiner(modelName) + '\n' + el
+            }
+
+            if (el.match(/^import /)) {
+                inImport = true
+            } else if (inImport) {
+                inImport = false
+
+                return (
+                    `import ${this.reducerName} from './${this.fileName}'` +
+                    '\n' +
+                    el
+                )
+            }
+
+            return el
+        })
+
+        writeFileSync(fdRoot, rootLines.join('\n'))
     }
 }
