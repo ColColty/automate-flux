@@ -45,4 +45,6 @@ export default function createActionType(
 
         actionTypeController.writeFile(fd)
     }
+
+    fs.closeSync(fd)
 }
