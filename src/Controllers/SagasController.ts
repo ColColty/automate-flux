@@ -78,7 +78,9 @@ export default class SagasController extends AbstractFluxController {
     ): { sagaFunctionName: string; content: string } {
         const params = propertiesToReturnAction(propertiesSend, '    ')
 
-        const sagaFunctionName = `${actionTypeController.getActionTypeIdentifier()}Call`
+        const sagaFunctionName = `${
+            actionTypeController.getActionTypeIdentifiers()[0]
+        }Call`
 
         const sagaFunction = `function* ${sagaFunctionName}({\n${params}\n\
 }: actionTypes.${actionTypeController.getActionTypeExportName()}) {\n\
@@ -87,12 +89,16 @@ export default class SagasController extends AbstractFluxController {
     try {\n\
         const { data } = yield call(${serviceController.getServiceName()}, params)\n\
         \n\
-        yield put(actionCreators.${actionTypeController.getActionTypeIdentifier()}Success(${propertiesSuccess
+        yield put(actionCreators.${
+    actionTypeController.getActionTypeIdentifiers()[0]
+}Success(${propertiesSuccess
     .map((el) => `data.${el.name}`)
     .join(', ')}))\n\
     } catch (error) {\n\
         errorHandler(error)\n\
-        yield put(actionCreators.${actionTypeController.getActionTypeIdentifier()}Failure(error))\n\
+        yield put(actionCreators.${
+    actionTypeController.getActionTypeIdentifiers()[0]
+}Failure(error))\n\
     }\n}\n`
 
         // TODO Let the user choose if it has to have an error handler function by the configuration of the extension

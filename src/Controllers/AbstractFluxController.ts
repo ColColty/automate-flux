@@ -33,7 +33,7 @@ export default abstract class AbstractFluxController {
     ): void {
         const actionsImport = `import * as actions from '@/${actionTypeController.getFolderName()}/${actionTypeController
             .getFileName()
-            .replace(/.ts(x)?/, '')}`
+            .replace(/.ts(x)?/, '')}'`
         const modelImport = generateModelImport(modelName)
 
         this.lines.push([actionsImport, modelImport].join('\n'))

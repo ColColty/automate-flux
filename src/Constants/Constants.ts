@@ -6,6 +6,6 @@ export const errorProperties: ParsedProperty[] = [
     {
         name: 'error',
         type: 'Error | string',
-        optional: false,
+        optional: true,
     },
 ]

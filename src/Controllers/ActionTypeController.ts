@@ -13,7 +13,7 @@ export default class ActionTypeController extends AbstractFluxController {
     private actionTypeInterfacesNames: string[]
     private actionTypeNames: string[]
     private actionTypeExportName: string
-    private actionTypeIdentifier: string
+    private actionTypeIdentifiers: string[]
 
     constructor(folderPath: string) {
         super(ActionTypesFolder, folderPath)
@@ -21,7 +21,7 @@ export default class ActionTypeController extends AbstractFluxController {
         this.actionTypeInterfacesNames = []
         this.actionTypeNames = []
         this.actionTypeExportName = ''
-        this.actionTypeIdentifier = ''
+        this.actionTypeIdentifiers = []
     }
 
     public createFile(
@@ -35,8 +35,16 @@ export default class ActionTypeController extends AbstractFluxController {
         return this.actionTypeExportName
     }
 
-    public getActionTypeIdentifier(): string {
-        return this.actionTypeIdentifier
+    public getActionTypeIdentifiers(): string[] {
+        return this.actionTypeIdentifiers
+    }
+
+    public getActionTypeNames(): string[] {
+        return this.actionTypeNames
+    }
+
+    public getActionTypeInterfacesNames(): string[] {
+        return this.actionTypeInterfacesNames
     }
 
     public addActionType(
@@ -52,6 +60,10 @@ export default class ActionTypeController extends AbstractFluxController {
                     ? SuccessAppendType
                     : FailureAppendType
                 : '')
+
+        this.actionTypeIdentifiers.push(
+            toCamelCase(actionTypeVarName.toLowerCase())
+        )
 
         const actionTypeName = `${toCamelCase(
             actionTypeVarName.toLowerCase()
@@ -77,7 +89,7 @@ export default class ActionTypeController extends AbstractFluxController {
         this.actionTypeExportName = `${capitalize(modelName)}Actions`
 
         if (!isAppend) {
-            const exportVariable = 'export type ${actionTypeExportName} ='
+            const exportVariable = `export type ${this.actionTypeExportName} =`
 
             exportActionTypes.push(exportVariable)
         }
