@@ -7,9 +7,9 @@ import {
 import { ActionTypesFolder } from '../Constants/FolderConstants'
 import ParsedProperty from '../Models/ParsedProperty'
 import { capitalize, propertiesToInterface, toCamelCase } from '../Utils/utils'
-import FluxController from './FluxController'
+import AbstractFluxController from './AbstractFluxController'
 
-export default class ActionTypeController extends FluxController {
+export default class ActionTypeController extends AbstractFluxController {
     private actionTypeNames: string[]
 
     constructor(folderPath: string) {

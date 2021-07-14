@@ -1,8 +1,8 @@
 import { ReducersFolder } from '../Constants/FolderConstants'
 import { fileNameExtension } from '../Constants/ReducerConstants'
-import FluxController from './FluxController'
+import AbstractFluxController from './AbstractFluxController'
 
-export default class ReducerController extends FluxController {
+export default class ReducerController extends AbstractFluxController {
     constructor(filePath: string) {
         super(ReducersFolder, filePath)
     }

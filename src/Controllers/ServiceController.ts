@@ -1,8 +1,8 @@
 import { ServicesFolder } from '../Constants/FolderConstants'
 import { fileNameExtension } from '../Constants/ServiceConstants'
-import FluxController from './FluxController'
+import AbstractFluxController from './AbstractFluxController'
 
-export default class ServiceController extends FluxController {
+export default class ServiceController extends AbstractFluxController {
     constructor(filePath: string) {
         super(ServicesFolder, filePath)
     }

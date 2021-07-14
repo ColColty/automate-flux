@@ -2,7 +2,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { capitalize, toCamelCase } from '../Utils/utils'
 
-export default abstract class FluxController {
+export default abstract class AbstractFluxController {
     protected folderName: string
     protected folderPath: string
     protected lines: string[]

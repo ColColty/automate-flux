@@ -1,8 +1,8 @@
 import { fileNameExtension } from '../Constants/ActionCreatorConstants'
 import { ActionCreatorsFolder } from '../Constants/FolderConstants'
-import FluxController from './FluxController'
+import AbstractFluxController from './AbstractFluxController'
 
-export default class ActionCreatorController extends FluxController {
+export default class ActionCreatorController extends AbstractFluxController {
     constructor(filePath: string) {
         super(ActionCreatorsFolder, filePath)
     }

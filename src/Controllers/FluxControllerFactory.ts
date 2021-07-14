@@ -7,7 +7,7 @@ import {
 } from '../Constants/FolderConstants'
 import ActionCreatorController from './ActionCreatorController'
 import ActionTypeController from './ActionTypeController'
-import FluxController from './FluxController'
+import AbstractFluxController from './AbstractFluxController'
 import ReducerController from './ReducerController'
 import SagasController from './SagasController'
 import ServiceController from './ServiceController'
@@ -15,7 +15,7 @@ import ServiceController from './ServiceController'
 export default function fluxControllerFactory(
     folderName: string,
     filePath: string
-): FluxController | undefined {
+): AbstractFluxController | undefined {
     switch (folderName) {
     case ActionCreatorsFolder:
         return new ActionCreatorController(filePath)

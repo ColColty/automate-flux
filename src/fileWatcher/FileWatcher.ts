@@ -3,17 +3,17 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { requiredFolders } from '../Constants/FolderConstants'
 import { baseFileWatch } from '../Constants/Constants'
-import FluxController from '../Controllers/FluxController'
-import fluxControllerFactory from '../Controllers/FluxControllerFactory'
+import AbstractFluxController from '../Controllers/AbstractAbstractFluxController'
+import fluxControllerFactory from '../Controllers/AbstractFluxControllerFactory'
 
 class FileWatcher {
-    private requiredDirsMapped: Map<string, FluxController>
+    private requiredDirsMapped: Map<string, AbstractFluxController>
     private basePath: string
     private chan: vscode.OutputChannel
 
     constructor(chan: vscode.OutputChannel) {
         this.basePath = ''
-        this.requiredDirsMapped = new Map<string, FluxController>()
+        this.requiredDirsMapped = new Map<string, AbstractFluxController>()
         this.chan = chan
 
         try {
@@ -82,11 +82,11 @@ class FileWatcher {
         vscode.window.showInformationMessage('All folders found !')
     }
 
-    public getFolderPath(name: string): FluxController | undefined {
+    public getFolderPath(name: string): AbstractFluxController | undefined {
         return this.requiredDirsMapped.get(name)
     }
 
-    public getFolderPaths(): Map<string, FluxController> {
+    public getFolderPaths(): Map<string, AbstractFluxController> {
         return this.requiredDirsMapped
     }
 }

@@ -1,8 +1,8 @@
 import { SagasFolder } from '../Constants/FolderConstants'
 import { fileNameExtension } from '../Constants/SagasConstants'
-import FluxController from './FluxController'
+import AbstractFluxController from './AbstractFluxController'
 
-export default class SagasController extends FluxController {
+export default class SagasController extends AbstractFluxController {
     constructor(filePath: string) {
         super(SagasFolder, filePath)
     }
