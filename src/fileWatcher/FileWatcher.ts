@@ -3,8 +3,8 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { requiredFolders } from '../Constants/FolderConstants'
 import { baseFileWatch } from '../Constants/Constants'
-import AbstractFluxController from '../Controllers/AbstractAbstractFluxController'
-import fluxControllerFactory from '../Controllers/AbstractFluxControllerFactory'
+import AbstractFluxController from '../Controllers/AbstractFluxController'
+import fluxControllerFactory from '../Controllers/FluxControllerFactory'
 
 class FileWatcher {
     private requiredDirsMapped: Map<string, AbstractFluxController>

@@ -43,8 +43,11 @@ export default abstract class AbstractFluxController {
     //     // TODO Append to file
     // }
 
-    public writeFile(fd: number): void {
-        fs.appendFileSync(fd, this.lines.join('\n') + '\n')
+    public writeFile(
+        fd: number,
+        content: string = this.lines.join('\n')
+    ): void {
+        fs.writeSync(fd, content + '\n')
     }
 
     public addLine(line: string): void {
@@ -57,5 +60,9 @@ export default abstract class AbstractFluxController {
 
     public getFileName(): string {
         return this.fileName
+    }
+
+    public getFolderPath(): string {
+        return this.folderPath
     }
 }
