@@ -169,12 +169,22 @@ export default class SagasController extends AbstractFluxController {
         )
 
         let rootLines = readFileSync(fd).toString().split('\n')
+        let inImport = false
 
         rootLines = rootLines.map((el) => {
             if (el.match(/^ {4}\]\)\n$/)) {
                 return this.generateSagaWatchRootAppend() + '\n' + el
             }
 
+            if (el.match(/^import /)) {
+                inImport = true
+            } else if (inImport) {
+                return (
+                    `import ${this.sagaMainFunction} from './${this.fileName}'` +
+                    '\n' +
+                    el
+                )
+            }
             return el
         })
 
