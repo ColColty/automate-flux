@@ -10,12 +10,16 @@ import { capitalize, propertiesToInterface, toCamelCase } from '../Utils/utils'
 import AbstractFluxController from './AbstractFluxController'
 
 export default class ActionTypeController extends AbstractFluxController {
+    private actionTypeInterfacesNames: string[]
     private actionTypeNames: string[]
+    private actionTypeExportName: string
 
     constructor(folderPath: string) {
         super(ActionTypesFolder, folderPath)
 
+        this.actionTypeInterfacesNames = []
         this.actionTypeNames = []
+        this.actionTypeExportName = ''
     }
 
     public createFile(
@@ -53,21 +57,22 @@ export default class ActionTypeController extends AbstractFluxController {
         )}\n}`
 
         this.lines.push(`${actionTypeLine}\n${actionInterfaceLine}\n`)
-        this.actionTypeNames.push(actionTypeName)
+        this.actionTypeInterfacesNames.push(actionTypeName)
+        this.actionTypeNames.push(actionTypeVarName)
     }
 
     public exportsActionTypeLines(modelName: string, isAppend = false): void {
         const exportActionTypes: string[] = []
 
+        this.actionTypeExportName = `${capitalize(modelName)}Actions`
+
         if (!isAppend) {
-            const exportVariable = `export type ${capitalize(
-                modelName
-            )}Actions =`
+            const exportVariable = 'export type ${actionTypeExportName} ='
 
             exportActionTypes.push(exportVariable)
         }
 
-        this.actionTypeNames.forEach((el) => {
+        this.actionTypeInterfacesNames.forEach((el) => {
             exportActionTypes.push(`    | ${el}`)
         })
 
