@@ -1,10 +1,22 @@
 import { SagasFolder } from '../Constants/FolderConstants'
 import { fileNameExtension } from '../Constants/SagasConstants'
+import ParsedProperty from '../Models/ParsedProperty'
+import {
+    capitalize,
+    propertiesToReturnAction,
+    toCamelCase,
+} from '../Utils/utils'
 import AbstractFluxController from './AbstractFluxController'
+import ActionCreatorController from './ActionCreatorController'
+import ActionTypeController from './ActionTypeController'
+import ServiceController from './ServiceController'
 
 export default class SagasController extends AbstractFluxController {
+    private sagaMainFunction: string
     constructor(filePath: string) {
         super(SagasFolder, filePath)
+
+        this.sagaMainFunction = ''
     }
 
     public createFile(
@@ -12,5 +24,84 @@ export default class SagasController extends AbstractFluxController {
         fluxExtension: string = fileNameExtension
     ): number {
         return super.createFile(modelName, fluxExtension)
+    }
+
+    public generateSagaImports(
+        actionTypeController: ActionTypeController,
+        actionCreatorController: ActionCreatorController
+    ): void {
+        const sagaImports =
+            'import { put, call, all, fork, takeLatest } from \'redux-saga/effects\''
+        const actionCreatorImport = `import * as actionCreators from '@/${actionCreatorController.getFolderName()}/${actionCreatorController.getFileName()}'`
+        const actionTypeImport = `import * as actionTypes from '@/${actionTypeController.getFolderName()}/${actionTypeController.getFileName()}'`
+
+        // TODO Set this variable to be configurable by the user
+        const errorHandlerImport =
+            'import { errorHandler } from \'@/Tools/ErrorHandler\''
+
+        this.lines.push(
+            [
+                sagaImports,
+                actionCreatorImport,
+                actionTypeImport,
+                errorHandlerImport,
+            ].join('\n')
+        )
+    }
+
+    public generateBaseFunctions(
+        modelName: string,
+        sagaFunctions: string[]
+    ): void {
+        const watchOnName = `watchOn${capitalize(toCamelCase(modelName))}`
+        const watchOnFunction = `function* ${watchOnName}() {\n${sagaFunctions.join(
+            '\n'
+        )}\n}\n`
+        this.sagaMainFunction = `${toCamelCase(modelName)}Sagas`
+        const sagasMainFunction = `export default function* ${this.sagaMainFunction}() {\n    yield all([fork(${watchOnName})])\n}`
+
+        this.lines.push([watchOnFunction, sagasMainFunction].join('\n'))
+    }
+
+    public generateSagaFunction(
+        actionTypeController: ActionTypeController,
+        propertiesSend: ParsedProperty[],
+        propertiesSuccess: ParsedProperty[],
+        serviceController: ServiceController
+    ): { sagaFunctionName: string; content: string } {
+        const params = propertiesToReturnAction(propertiesSend, '    ')
+
+        const sagaFunctionName = `${actionTypeController.getActionTypeIdentifier()}Call`
+
+        const sagaFunction = `function* ${sagaFunctionName}({\n${params}\n\
+}: actionTypes.${actionTypeController.getActionTypeExportName()}) {\n\
+    const params = {\n${propertiesToReturnAction(propertiesSend, '        ')}\n\
+    }\n\
+    try {\n\
+        const { data } = yield call(${serviceController.getServiceName()}, params)\n\
+        \n\
+        yield put(actionCreators.${actionTypeController.getActionTypeIdentifier()}Success(${propertiesSuccess
+    .map((el) => `data.${el.name}`)
+    .join(', ')}))\n\
+    } catch (error) {\n\
+        errorHandler(error)\n\
+        yield put(actionCreators.${actionTypeController.getActionTypeIdentifier()}Failure(error))\n\
+    }\n}\n`
+
+        // TODO Let the user choose if it has to have an error handler function by the configuration of the extension
+
+        return {
+            sagaFunctionName,
+            content: sagaFunction,
+        }
+    }
+
+    public generateSagaWatchers(
+        sagaFunctionName: string,
+        actionTypeVarName: string
+    ): string {
+        const sagaWatcher = `    yield takeLatest(actionTypes.${actionTypeVarName}, ${sagaFunctionName})`
+
+        return sagaWatcher
     }
 }

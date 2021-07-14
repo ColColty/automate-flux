@@ -9,8 +9,11 @@ import {
 import AbstractFluxController from './AbstractFluxController'
 
 export default class ActionCreatorController extends AbstractFluxController {
+    private actionCreatorNames: string[]
     constructor(filePath: string) {
         super(ActionCreatorsFolder, filePath)
+
+        this.actionCreatorNames = []
     }
 
     public createFile(
@@ -27,6 +30,7 @@ export default class ActionCreatorController extends AbstractFluxController {
         properties: ParsedProperty[]
     ): void {
         const creatorName = `${toCamelCase(actionName)}`
+        this.actionCreatorNames.push(creatorName)
 
         const creatorFunction = `export function ${creatorName}(\n${propertiesToInterface(
             properties,

@@ -27,11 +27,14 @@ export function propertiesToInterface(
     return propertiesParsed.join('\n')
 }
 
-export function propertiesToReturnAction(properties: ParsedProperty[]): string {
+export function propertiesToReturnAction(
+    properties: ParsedProperty[],
+    indent = '        '
+): string {
     const propertiesParsed: string[] = []
 
     properties.forEach((el) => {
-        const propertyLine = `        ${toCamelCase(el.name)},`
+        const propertyLine = `${indent}${toCamelCase(el.name)},`
 
         propertiesParsed.push(propertyLine)
     })

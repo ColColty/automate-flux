@@ -13,6 +13,7 @@ export default class ActionTypeController extends AbstractFluxController {
     private actionTypeInterfacesNames: string[]
     private actionTypeNames: string[]
     private actionTypeExportName: string
+    private actionTypeIdentifier: string
 
     constructor(folderPath: string) {
         super(ActionTypesFolder, folderPath)
@@ -20,6 +21,7 @@ export default class ActionTypeController extends AbstractFluxController {
         this.actionTypeInterfacesNames = []
         this.actionTypeNames = []
         this.actionTypeExportName = ''
+        this.actionTypeIdentifier = ''
     }
 
     public createFile(
@@ -31,6 +33,10 @@ export default class ActionTypeController extends AbstractFluxController {
 
     public getActionTypeExportName(): string {
         return this.actionTypeExportName
+    }
+
+    public getActionTypeIdentifier(): string {
+        return this.actionTypeIdentifier
     }
 
     public addActionType(
