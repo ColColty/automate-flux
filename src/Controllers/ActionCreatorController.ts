@@ -1,5 +1,11 @@
 import { fileNameExtension } from '../Constants/ActionCreatorConstants'
 import { ActionCreatorsFolder } from '../Constants/FolderConstants'
+import ParsedProperty from '../Models/ParsedProperty'
+import {
+    propertiesToInterface,
+    propertiesToReturnAction,
+    toCamelCase,
+} from '../Utils/utils'
 import AbstractFluxController from './AbstractFluxController'
 
 export default class ActionCreatorController extends AbstractFluxController {
@@ -12,5 +18,23 @@ export default class ActionCreatorController extends AbstractFluxController {
         fluxExtension: string = fileNameExtension
     ): number {
         return super.createFile(modelName, fluxExtension)
+    }
+
+    public addActionCreator(
+        actionTypeName: string,
+        actionTypeVarName: string,
+        actionName: string,
+        properties: ParsedProperty[]
+    ): void {
+        const creatorName = `${toCamelCase(actionName)}`
+
+        const creatorFunction = `export function ${creatorName}(\n${propertiesToInterface(
+            properties,
+            true
+        )}\n): actions.${actionTypeName} {\n    return {\n        type: actions.${actionTypeVarName},\n${propertiesToReturnAction(
+            properties
+        )}\n    }\n}\n`
+
+        this.lines.push(creatorFunction)
     }
 }

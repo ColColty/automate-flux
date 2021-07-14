@@ -16,6 +16,8 @@ export default function modelParsing(model: string): ParsedModel {
 
         if (intReRes) {
             parsedModel.interfaceName = intReRes[1]
+        } else {
+            throw new Error('The selected model isn\'t valid')
         }
     }
 

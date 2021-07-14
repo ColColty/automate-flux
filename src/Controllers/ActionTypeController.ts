@@ -29,6 +29,10 @@ export default class ActionTypeController extends AbstractFluxController {
         return super.createFile(modelName, fluxExtension)
     }
 
+    public getActionTypeExportName(): string {
+        return this.actionTypeExportName
+    }
+
     public addActionType(
         modelName: string,
         actionType: string,

@@ -10,13 +10,45 @@ export function toCamelCase(str: string): string {
         .replace(/[\s_]+/g, '')
 }
 
-export function propertiesToInterface(properties: ParsedProperty[]): string {
+export function propertiesToInterface(
+    properties: ParsedProperty[],
+    isObject = false
+): string {
     const propertiesParsed: string[] = []
 
     properties.forEach((el) => {
         const propertyLine = `    ${toCamelCase(el.name)}${
             el.optional ? '?' : ''
-        }: ${el.type}`
+        }: ${el.type}${isObject ? ',' : ''}`
+
+        propertiesParsed.push(propertyLine)
+    })
+
+    return propertiesParsed.join('\n')
+}
+
+export function propertiesToReturnAction(properties: ParsedProperty[]): string {
+    const propertiesParsed: string[] = []
+
+    properties.forEach((el) => {
+        const propertyLine = `        ${toCamelCase(el.name)},`
+
+        propertiesParsed.push(propertyLine)
+    })
+
+    return propertiesParsed.join('\n')
+}
+
+export function propertiesToObjectValues(
+    properties: ParsedProperty[],
+    indentation = '    '
+): string {
+    const propertiesParsed: string[] = []
+
+    properties.forEach((el) => {
+        const propertyLine = `${indentation}${el.name}: ${
+            el.defaultValue || 'undefined'
+        },`
 
         propertiesParsed.push(propertyLine)
     })
