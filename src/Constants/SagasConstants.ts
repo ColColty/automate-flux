@@ -1,1 +1,1 @@
-export const fileNameExtension = "Sagas"
+export const fileNameExtension = 'Sagas'

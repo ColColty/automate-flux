@@ -1,1 +1,1 @@
-export const fileNameExtension = "Service"
+export const fileNameExtension = 'Service'

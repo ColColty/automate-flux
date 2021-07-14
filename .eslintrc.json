@@ -1,31 +1,19 @@
 {
     "env": {
-        "jest/globals": true
+        "browser": true,
+        "es2021": true
     },
-    "root": true,
+    "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
-        "ecmaVersion": 6,
+        "ecmaVersion": 12,
         "sourceType": "module"
     },
-    "plugins": [
-        "@typescript-eslint"
-    ],
+    "plugins": ["@typescript-eslint"],
     "rules": {
-        "semi": ["error", "never"],
-        "object-curly-spacing": ["error", "always"],
-        "array-bracket-spacing": ["error", "never"],
         "indent": ["error", 4],
-
-        "@typescript-eslint/naming-convention": "camelCase",
-        "@typescript-eslint/semi": "warn",
-        "curly": "warn",
-        "eqeqeq": "warn",
-        "no-throw-literal": "warn"
-    },
-    "ignorePatterns": [
-        "out",
-        "dist",
-        "**/*.d.ts"
-    ]
+        "linebreak-style": ["error", "unix"],
+        "quotes": ["error", "single"],
+        "semi": ["error", "never"]
+    }
 }

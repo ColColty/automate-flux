@@ -1,6 +1,6 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import { capitalize, toCamelCase } from '../Utils/utils';
+import { capitalize, toCamelCase } from '../Utils/utils'
 
 export default abstract class FluxController {
     protected folderName: string
@@ -14,7 +14,8 @@ export default abstract class FluxController {
     }
 
     public createFile(modelName: string, fluxExtension: string): number {
-        const filename = capitalize(toCamelCase(modelName)) + fluxExtension + ".ts"
+        const filename =
+            capitalize(toCamelCase(modelName)) + fluxExtension + '.ts'
         const filePath = path.join(this.folderPath, filename)
 
         const fd = fs.openSync(filePath, 'a+')
@@ -26,11 +27,11 @@ export default abstract class FluxController {
     //     // TODO Append to file
     // }
 
-    public writeFile(fd: number) {
+    public writeFile(fd: number): void {
         fs.appendFileSync(fd, this.lines.join('\n') + '\n')
     }
 
-    public addLine(line: string) {
+    public addLine(line: string): void {
         this.lines.push(line)
     }
 }

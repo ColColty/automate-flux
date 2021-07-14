@@ -1,4 +1,4 @@
-import ParsedProperty from "./ParsedProperty";
+import ParsedProperty from './ParsedProperty'
 
 export default interface ParsedModel {
     interfaceName: string

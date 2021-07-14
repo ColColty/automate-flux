@@ -1,24 +1,33 @@
-import { ActionCreatorsFolder, ActionTypesFolder, ReducersFolder, SagasFolder, ServicesFolder } from "../Constants/FolderConstants";
-import ActionCreatorController from "./ActionCreatorController";
-import ActionTypeController from "./ActionTypeController";
-import FluxController from "./FluxController";
-import ReducerController from "./ReducerController";
-import SagasController from "./SagasController";
-import ServiceController from "./ServiceController";
+import {
+    ActionCreatorsFolder,
+    ActionTypesFolder,
+    ReducersFolder,
+    SagasFolder,
+    ServicesFolder,
+} from '../Constants/FolderConstants'
+import ActionCreatorController from './ActionCreatorController'
+import ActionTypeController from './ActionTypeController'
+import FluxController from './FluxController'
+import ReducerController from './ReducerController'
+import SagasController from './SagasController'
+import ServiceController from './ServiceController'
 
-export default function fluxControllerFactory(folderName: string, filePath: string): FluxController | undefined {
+export default function fluxControllerFactory(
+    folderName: string,
+    filePath: string
+): FluxController | undefined {
     switch (folderName) {
-        case ActionCreatorsFolder:
-            return new ActionCreatorController(filePath)
-        case ActionTypesFolder:
-            return new ActionTypeController(filePath)
-        case SagasFolder:
-            return new SagasController(filePath)
-        case ReducersFolder:
-            return new ReducerController(filePath)
-        case ServicesFolder:
-            return new ServiceController(filePath)
-        default:
-            return undefined
+    case ActionCreatorsFolder:
+        return new ActionCreatorController(filePath)
+    case ActionTypesFolder:
+        return new ActionTypeController(filePath)
+    case SagasFolder:
+        return new SagasController(filePath)
+    case ReducersFolder:
+        return new ReducerController(filePath)
+    case ServicesFolder:
+        return new ServiceController(filePath)
+    default:
+        return undefined
     }
 }

@@ -1,1 +1,1 @@
-export const fileNameExtension = "Reducer"
+export const fileNameExtension = 'Reducer'

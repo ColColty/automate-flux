@@ -1,1 +1,1 @@
-export const fileNameExtension = "ActionCreator"
+export const fileNameExtension = 'ActionCreator'

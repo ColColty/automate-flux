@@ -1,18 +1,20 @@
 import * as vscode from 'vscode'
 import * as fs from 'fs'
 import * as path from 'path'
-import { requiredFolders } from '../Constants/FolderConstants';
-import { baseFileWatch } from '../Constants/Constants';
-import FluxController from '../Controllers/FluxController';
-import fluxControllerFactory from '../Controllers/FluxControllerFactory';
+import { requiredFolders } from '../Constants/FolderConstants'
+import { baseFileWatch } from '../Constants/Constants'
+import FluxController from '../Controllers/FluxController'
+import fluxControllerFactory from '../Controllers/FluxControllerFactory'
 
 class FileWatcher {
-    private requiredDirsMapped: Map<string, FluxController>;
-    private basePath: string;
+    private requiredDirsMapped: Map<string, FluxController>
+    private basePath: string
+    private chan: vscode.OutputChannel
 
-    constructor() {
-        this.basePath = ""
+    constructor(chan: vscode.OutputChannel) {
+        this.basePath = ''
         this.requiredDirsMapped = new Map<string, FluxController>()
+        this.chan = chan
 
         try {
             this.findFolders()
@@ -21,49 +23,61 @@ class FileWatcher {
         }
     }
 
-    public findFolders() {
-        vscode.workspace.findFiles('**/' + baseFileWatch, '**/node_modules/**', 1).then(res => {
-            if (res.length) {
-                const reREs = res[0].path.match(/[\w-\/]*\/src/)
+    public findFolders(): void {
+        vscode.workspace
+            .findFiles('**/' + baseFileWatch, '**/node_modules/**', 1)
+            .then((res) => {
+                if (res.length) {
+                    const reREs = res[0].path.match(/[\w-/]*\/src/)
 
-                if (reREs) {
-                    this.basePath = reREs[0]
+                    if (reREs) {
+                        this.basePath = reREs[0]
 
-                    const dir = fs.readdirSync(this.basePath)
+                        const dir = fs.readdirSync(this.basePath)
 
-                    requiredFolders.forEach(folder => {
-                        const folderPath = path.join(this.basePath, folder)
+                        requiredFolders.forEach((folder) => {
+                            const folderPath = path.join(this.basePath, folder)
 
-                        if (!dir.includes(folder)) {
-                            // TODO Ask to the user if he want to create the related folders
-                            // fs.mkdir(folderPath, (err) => {
-                            //     if (err) throw err
+                            if (!dir.includes(folder)) {
+                                // TODO Ask to the user if he want to create the related folders
+                                // fs.mkdir(folderPath, (err) => {
+                                //     if (err) throw err
+                                //     const controller = fluxControllerFactory(folder, folderPath)
+                                //     if (controller) {
+                                //         this.requiredDirsMapped.set(folder, controller)
+                                //         vscode.window.showInformationMessage(`Automate-flux create folder: ${folder}`)
+                                //     }
+                                // })
+                            } else {
+                                const dirStat = fs.statSync(folderPath)
 
-                            //     const controller = fluxControllerFactory(folder, folderPath)
+                                if (!dirStat.isDirectory) {
+                                    throw new Error(
+                                        'Required folder name used as file: ' +
+                                            folder
+                                    )
+                                }
 
-                            //     if (controller) {
-                            //         this.requiredDirsMapped.set(folder, controller)
+                                const controller = fluxControllerFactory(
+                                    folder,
+                                    folderPath
+                                )
 
-                            //         vscode.window.showInformationMessage(`Automate-flux create folder: ${folder}`)
-                            //     }
-                            // })
-                        } else {
-                            const dirStat = fs.statSync(folderPath)
+                                if (controller) {
+                                    this.chan.appendLine(
+                                        `Folder ${folder} found`
+                                    )
 
-                            if (!dirStat.isDirectory) {
-                                throw new Error('Required folder name used as file: ' + folder)
+                                    this.requiredDirsMapped.set(
+                                        folder,
+                                        controller
+                                    )
+                                }
                             }
-
-                            const controller = fluxControllerFactory(folder, folderPath)
-
-                            if (controller) {
-                                this.requiredDirsMapped.set(folder, controller)
-                            }
-                        }
-                    })
+                        })
+                    }
                 }
-            }
-        })
+            })
 
         vscode.window.showInformationMessage('All folders found !')
     }
