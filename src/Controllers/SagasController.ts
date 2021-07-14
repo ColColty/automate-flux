@@ -30,12 +30,16 @@ export default class SagasController extends AbstractFluxController {
 
     public generateSagaImports(
         actionTypeController: ActionTypeController,
-        actionCreatorController: ActionCreatorController
+        actionCreatorController: ActionCreatorController,
+        serviceController: ServiceController
     ): void {
         const sagaImports =
             'import { put, call, all, fork, takeLatest } from \'redux-saga/effects\''
         const actionCreatorImport = `import * as actionCreators from '@/${actionCreatorController.getFolderName()}/${actionCreatorController.getFileName()}'`
         const actionTypeImport = `import * as actionTypes from '@/${actionTypeController.getFolderName()}/${actionTypeController.getFileName()}'`
+        const serviceImport = `import {\n${serviceController.getServiceName()},\n} from '@/${serviceController.getFolderName()}/${serviceController
+            .getFileName()
+            .replace('.ts', '')}'`
 
         // TODO Set this variable to be configurable by the user
         const errorHandlerImport =
@@ -46,6 +50,7 @@ export default class SagasController extends AbstractFluxController {
                 sagaImports,
                 actionCreatorImport,
                 actionTypeImport,
+                serviceImport,
                 errorHandlerImport,
             ].join('\n')
         )
@@ -110,12 +115,17 @@ export default class SagasController extends AbstractFluxController {
     public appendSagaFile(
         fd: number,
         sagaWatcher: string,
-        sagaFunction: string
+        sagaFunction: string,
+        serviceController: ServiceController
     ): void {
         let rootLines = readFileSync(fd).toString().split('\n')
         let inSagaYields = false
 
         rootLines = rootLines.map((el) => {
+            if (el.match(/^\} from '@\/Services\/(\w+)Service'/)) {
+                return `    ${serviceController.getServiceName()},\n` + el
+            }
+
             if (el.match(/^function\* watchOn(\w+)\(\) \{$/)) {
                 return sagaFunction + '\n' + el
             }

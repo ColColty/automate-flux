@@ -39,9 +39,12 @@ export default abstract class AbstractFluxController {
         this.lines.push([actionsImport, modelImport].join('\n'))
     }
 
-    // public appendFile(fd: number, content: string) {
-    //     // TODO Append to file
-    // }
+    public appendFile(
+        fd: number,
+        content: string = this.lines.join('\n')
+    ): void {
+        fs.appendFileSync(fd, content + '\n')
+    }
 
     public writeFile(
         fd: number,
