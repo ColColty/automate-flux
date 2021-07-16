@@ -1,5 +1,4 @@
 import { readFileSync, writeFileSync } from 'fs'
-import { join } from 'path'
 import { ReducersFolder } from '../Constants/FolderConstants'
 import { fileNameExtension } from '../Constants/ReducerConstants'
 import ParsedProperty from '../Models/ParsedProperty'

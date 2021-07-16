@@ -5,4 +5,6 @@ export default interface ParsedModel {
     properties: ParsedProperty[]
     propertiesSend?: ParsedProperty[] | undefined
     propertiesSuccess?: ParsedProperty[] | undefined
+    apiURL?: string
+    apiVerb?: string
 }

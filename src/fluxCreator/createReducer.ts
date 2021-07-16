@@ -6,8 +6,8 @@ import ParsedModel from '../Models/ParsedModel'
 import ParsedProperty from '../Models/ParsedProperty'
 
 export default function createReducer(
-    reducerController: ReducerController,
     actionTypeController: ActionTypeController,
+    reducerController: ReducerController,
     parsedModel: ParsedModel
 ): void {
     const fd = reducerController.createFile(parsedModel.interfaceName)

@@ -41,8 +41,14 @@ export default class ServiceController extends AbstractFluxController {
         this.serviceName = `fetch${capitalize(
             actionTypeController.getActionTypeIdentifiers()[0]
         )}`
-        const fetchFunction = `export async function ${this.serviceName}(params: Object): Promise<${responseInterfaceName}> {\n\
-    const response = await api.${apiVerb.toLowerCase}('${apiURL}', params)\n\n    return response\n}`
+        const fetchFunction = `export async function ${
+            this.serviceName
+        }(params: Object): Promise<${responseInterfaceName}> {\n\
+    const response = await api.${apiVerb.toLowerCase()}(${
+    apiURL.includes('${') ? '`' : '\''
+}${apiURL}${
+    apiURL.includes('${') ? '`' : '\''
+}, params)\n\n    return response\n}`
 
         this.lines.push([responseInterface, fetchFunction].join('\n'))
     }
