@@ -35,8 +35,12 @@ export default class SagasController extends AbstractFluxController {
     ): void {
         const sagaImports =
             'import { put, call, all, fork, takeLatest } from \'redux-saga/effects\''
-        const actionCreatorImport = `import * as actionCreators from '@/${actionCreatorController.getFolderName()}/${actionCreatorController.getFileName()}'`
-        const actionTypeImport = `import * as actionTypes from '@/${actionTypeController.getFolderName()}/${actionTypeController.getFileName()}'`
+        const actionCreatorImport = `import * as actionCreators from '@/${actionCreatorController.getFolderName()}/${actionCreatorController
+            .getFileName()
+            .replace('.ts', '')}'`
+        const actionTypeImport = `import * as actionTypes from '@/${actionTypeController.getFolderName()}/${actionTypeController
+            .getFileName()
+            .replace('.ts', '')}'`
         const serviceImport = `import {\n${serviceController.getServiceName()},\n} from '@/${serviceController.getFolderName()}/${serviceController
             .getFileName()
             .replace('.ts', '')}'`
@@ -58,10 +62,10 @@ export default class SagasController extends AbstractFluxController {
 
     public generateBaseFunctions(
         modelName: string,
-        sagaFunctions: string[]
+        sagaWatchers: string[]
     ): void {
         const watchOnName = `watchOn${capitalize(toCamelCase(modelName))}`
-        const watchOnFunction = `function* ${watchOnName}() {\n${sagaFunctions.join(
+        const watchOnFunction = `function* ${watchOnName}() {\n${sagaWatchers.join(
             '\n'
         )}\n}\n`
         this.sagaMainFunction = `${toCamelCase(modelName)}Sagas`
@@ -83,7 +87,7 @@ export default class SagasController extends AbstractFluxController {
         }Call`
 
         const sagaFunction = `function* ${sagaFunctionName}({\n${params}\n\
-}: actionTypes.${actionTypeController.getActionTypeExportName()}) {\n\
+}: actionTypes.${actionTypeController.getActionTypeInterfacesNames()[0]}) {\n\
     const params = {\n${propertiesToReturnAction(propertiesSend, '        ')}\n\
     }\n\
     try {\n\
@@ -109,7 +113,7 @@ export default class SagasController extends AbstractFluxController {
         }
     }
 
-    public generateSagaWatchers(
+    public generateSagaWatcher(
         sagaFunctionName: string,
         actionTypeVarName: string
     ): string {
@@ -168,8 +172,8 @@ export default class SagasController extends AbstractFluxController {
         this.writeFile(fdRoot, content)
     }
 
-    public appendRootFile(fd: number): void {
-        let rootLines = readFileSync(fd).toString().split('\n')
+    public appendRootFile(fd: number, rootData: string): void {
+        let rootLines = rootData.split('\n')
         let inImport = false
 
         rootLines = rootLines.map((el) => {
