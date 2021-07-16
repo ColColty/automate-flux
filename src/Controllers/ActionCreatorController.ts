@@ -41,4 +41,10 @@ export default class ActionCreatorController extends AbstractFluxController {
 
         this.lines.push(creatorFunction)
     }
+
+    public reset(): void {
+        super.reset()
+
+        this.actionCreatorNames = []
+    }
 }

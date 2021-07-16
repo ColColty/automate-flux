@@ -18,11 +18,26 @@ export default abstract class AbstractFluxController {
     }
 
     public createFile(modelName: string, fluxExtension: string): number {
-        this.fileName =
-            capitalize(toCamelCase(modelName)) + fluxExtension + '.ts'
-        const filePath = path.join(this.folderPath, this.fileName)
+        let filename = ''
 
-        const fd = fs.openSync(filePath, 'a+')
+        if (modelName.toLowerCase().includes('root')) {
+            filename =
+                capitalize(toCamelCase(modelName)) + fluxExtension + '.ts'
+        } else {
+            this.fileName =
+                capitalize(toCamelCase(modelName)) + fluxExtension + '.ts'
+            filename = this.fileName
+        }
+
+        const filePath = path.join(this.folderPath, filename)
+
+        let fd = 0
+
+        try {
+            fd = fs.openSync(filePath, 'r+')
+        } catch {
+            fd = fs.openSync(filePath, 'w+')
+        }
 
         return fd
     }
@@ -67,5 +82,10 @@ export default abstract class AbstractFluxController {
 
     public getFolderPath(): string {
         return this.folderPath
+    }
+
+    public reset(): void {
+        this.lines = []
+        this.fileName = ''
     }
 }

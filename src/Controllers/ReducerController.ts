@@ -1,4 +1,5 @@
 import { readFileSync, writeFileSync } from 'fs'
+import { join } from 'path'
 import { ReducersFolder } from '../Constants/FolderConstants'
 import { fileNameExtension } from '../Constants/ReducerConstants'
 import ParsedProperty from '../Models/ParsedProperty'
@@ -14,6 +15,20 @@ import ActionTypeController from './ActionTypeController'
 export default class ReducerController extends AbstractFluxController {
     private stateName: string
     private reducerName: string
+    private defaultProperties: ParsedProperty[] = [
+        {
+            name: 'isLoading',
+            type: 'boolean',
+            optional: false,
+            defaultValue: 'false',
+        },
+        {
+            name: 'error',
+            type: 'Error | string',
+            optional: true,
+            defaultValue: 'undefined',
+        },
+    ]
 
     constructor(filePath: string) {
         super(ReducersFolder, filePath)
@@ -33,23 +48,10 @@ export default class ReducerController extends AbstractFluxController {
         modelName: string,
         properties: ParsedProperty[]
     ): void {
-        const defaultProperties: ParsedProperty[] = [
-            {
-                name: 'isLoading',
-                type: 'boolean',
-                optional: false,
-                defaultValue: 'false',
-            },
-            {
-                name: 'error',
-                type: 'Error | string',
-                optional: true,
-                defaultValue: 'null',
-            },
-        ]
-
-        const allProperties = defaultProperties.concat(properties)
+        const allProperties = this.defaultProperties.concat(properties)
         this.stateName = `${capitalize(toCamelCase(modelName))}State`
+
+        this.lines.unshift('/* eslint-disable prettier/prettier */')
 
         const interfaceContent = `export interface ${
             this.stateName
@@ -86,10 +88,29 @@ export default class ReducerController extends AbstractFluxController {
         actionTypeVarName: string,
         properties: ParsedProperty[]
     ): string {
-        const reducerContent = `    case actions.${actionTypeVarName}:\n    return {\n            ...state,\n${propertiesToObjectValues(
-            properties,
+        let userProperties = [...properties]
+
+        const allProperties = this.defaultProperties
+            .map((el) => {
+                const prop = userProperties.find((elP) => el.name === elP.name)
+
+                if (prop) {
+                    userProperties = userProperties.filter(
+                        (el) => el.name !== prop.name
+                    )
+                    return {
+                        ...el,
+                        defaultValue: prop.defaultValue,
+                    }
+                }
+                return el
+            })
+            .concat(userProperties)
+
+        const reducerContent = `    case actions.${actionTypeVarName}:\n        return {\n            ...state,\n${propertiesToObjectValues(
+            allProperties,
             '            '
-        )}\n        }\n`
+        )}\n        }`
 
         return reducerContent
     }
@@ -109,7 +130,7 @@ export default class ReducerController extends AbstractFluxController {
     }
 
     public generateReducerRootCombiner(modelName: string): string {
-        return `    ${modelName}: ${this.reducerName},`
+        return `    ${toCamelCase(modelName)}: ${this.reducerName},`
     }
 
     public generateRootFile(fdRoot: number, modelName: string): void {
@@ -121,13 +142,17 @@ export default class ReducerController extends AbstractFluxController {
 
         const rootReducerFunction = `const RootReducer = combineReducers({\n${this.generateReducerRootCombiner(
             modelName
-        )}\n})\n\nexport type AppState = ReturnType<typeof RootReducer>\n\nexport default RootReducer\n`
+        )}\n})\n\nexport type AppState = ReturnType<typeof RootReducer>\n\nexport default RootReducer`
 
         this.writeFile(fdRoot, [imports, rootReducerFunction].join('\n'))
     }
 
-    public appendRootFile(fdRoot: number, modelName: string): void {
-        let rootLines = readFileSync(fdRoot).toString().split('\n')
+    public appendRootFile(
+        fdRoot: number,
+        modelName: string,
+        fileData: string
+    ): void {
+        let rootLines = fileData.split('\n')
         let inImport = false
 
         rootLines = rootLines.map((el) => {
@@ -141,7 +166,10 @@ export default class ReducerController extends AbstractFluxController {
                 inImport = false
 
                 return (
-                    `import ${this.reducerName} from './${this.fileName}'` +
+                    `import ${this.reducerName} from './${this.fileName.replace(
+                        '.ts',
+                        ''
+                    )}'` +
                     '\n' +
                     el
                 )
@@ -151,5 +179,10 @@ export default class ReducerController extends AbstractFluxController {
         })
 
         writeFileSync(fdRoot, rootLines.join('\n'))
+    }
+
+    public reset(): void {
+        this.stateName = ''
+        this.reducerName = ''
     }
 }

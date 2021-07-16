@@ -77,7 +77,7 @@ export async function getSendProperty(
     }
 
     const resType = await vscode.window.showInputBox({
-        title: 'Type of the property or <escape> to continue',
+        title: `Type of the property ${resName} or <escape> to continue`,
     })
     if (!resType) {
         return propertiesSend
@@ -90,10 +90,15 @@ export async function getSendProperty(
         return propertiesSend
     }
 
+    const defaultValue = await vscode.window.showInputBox({
+        title: `Default value of the property ${resName}, <enter> empty to ignore or <escape> to continue`,
+    })
+
     const sendProperty: ParsedProperty = {
         name: resName,
         type: resType,
         optional: resOptional === 'Yes' ? true : false,
+        defaultValue: defaultValue,
     }
 
     propertiesSend.push(sendProperty)

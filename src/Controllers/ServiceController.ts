@@ -46,4 +46,10 @@ export default class ServiceController extends AbstractFluxController {
 
         this.lines.push([responseInterface, fetchFunction].join('\n'))
     }
+
+    public reset(): void {
+        super.reset()
+
+        this.serviceName = ''
+    }
 }

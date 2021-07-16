@@ -192,4 +192,10 @@ export default class SagasController extends AbstractFluxController {
 
         writeFileSync(fd, rootLines.join('\n'))
     }
+
+    public reset(): void {
+        super.reset()
+
+        this.sagaMainFunction = ''
+    }
 }

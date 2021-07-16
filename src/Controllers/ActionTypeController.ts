@@ -100,4 +100,13 @@ export default class ActionTypeController extends AbstractFluxController {
 
         this.lines.push(exportActionTypes.join('\n'))
     }
+
+    public reset(): void {
+        super.reset()
+
+        this.actionTypeInterfacesNames = []
+        this.actionTypeNames = []
+        this.actionTypeExportName = ''
+        this.actionTypeIdentifiers = []
+    }
 }
