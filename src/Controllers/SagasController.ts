@@ -156,7 +156,7 @@ export default class SagasController extends AbstractFluxController {
     }
 
     public generateSagaWatchRootAppend(): string {
-        return `        fork(${this.sagaMainFunction})`
+        return `        fork(${this.sagaMainFunction}),`
     }
 
     public generateSagaRootFile(fdRoot: number): void {
@@ -187,7 +187,9 @@ export default class SagasController extends AbstractFluxController {
             } else if (inImport) {
                 inImport = false
                 return (
-                    `import ${this.sagaMainFunction} from './${this.fileName}'` +
+                    `import ${
+                        this.sagaMainFunction
+                    } from './${this.fileName.replace('.ts', '')}'` +
                     '\n' +
                     el
                 )

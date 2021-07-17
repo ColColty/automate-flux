@@ -4,6 +4,7 @@ import {
     ReducersFolder,
     SagasFolder,
     ServicesFolder,
+    StoreFolder,
 } from '../Constants/FolderConstants'
 import ActionCreatorController from '../Controllers/ActionCreatorController'
 import ActionTypeController from '../Controllers/ActionTypeController'
@@ -20,6 +21,8 @@ import createService from './createService'
 import * as vscode from 'vscode'
 import createSagas from './createSagas'
 import SagasController from '../Controllers/SagasController'
+import createStore from './createStore'
+import StoreController from '../Controllers/StoreController'
 
 export default function fluxCreator(
     fileWatcher: FileWatcher,
@@ -52,6 +55,7 @@ export default function fluxCreator(
         const reducerController = fileWatcher.getFolderPath(ReducersFolder)
         const serviceController = fileWatcher.getFolderPath(ServicesFolder)
         const sagasController = fileWatcher.getFolderPath(SagasFolder)
+        const storeController = fileWatcher.getFolderPath(StoreFolder)
 
         if (
             actionTypeController &&
@@ -83,6 +87,11 @@ export default function fluxCreator(
                 <ActionCreatorController>actionCreatorController,
                 <ServiceController>serviceController,
                 <SagasController>sagasController,
+                parsedModel
+            )
+            createStore(
+                <StoreController>storeController,
+                <ReducerController>reducerController,
                 parsedModel
             )
         }
