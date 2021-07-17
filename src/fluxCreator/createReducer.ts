@@ -5,6 +5,34 @@ import ReducerController from '../Controllers/ReducerController'
 import ParsedModel from '../Models/ParsedModel'
 import ParsedProperty from '../Models/ParsedProperty'
 
+function createRootFile(
+    reducerController: ReducerController,
+    parsedModel: ParsedModel
+): void {
+    let fdRoot = reducerController.createFile(rootFileName)
+
+    const rootData = readFileSync(fdRoot)
+
+    if (rootData.length) {
+        const dataString = rootData.toString()
+        closeSync(fdRoot)
+
+        fdRoot = reducerController.createFile(rootFileName)
+
+        ftruncateSync(fdRoot, 0)
+
+        reducerController.appendRootFile(
+            fdRoot,
+            parsedModel.interfaceName,
+            dataString
+        )
+    } else {
+        reducerController.generateRootFile(fdRoot, parsedModel.interfaceName)
+    }
+
+    closeSync(fdRoot)
+}
+
 export default function createReducer(
     actionTypeController: ActionTypeController,
     reducerController: ReducerController,
@@ -58,30 +86,9 @@ export default function createReducer(
         )
 
         reducerController.writeFile(fd)
+
+        createRootFile(reducerController, parsedModel)
     }
 
     closeSync(fd)
-
-    let fdRoot = reducerController.createFile(rootFileName)
-
-    const rootData = readFileSync(fdRoot)
-
-    if (rootData.length) {
-        const dataString = rootData.toString()
-        closeSync(fdRoot)
-
-        fdRoot = reducerController.createFile(rootFileName)
-
-        ftruncateSync(fdRoot, 0)
-
-        reducerController.appendRootFile(
-            fdRoot,
-            parsedModel.interfaceName,
-            dataString
-        )
-    } else {
-        reducerController.generateRootFile(fdRoot, parsedModel.interfaceName)
-    }
-
-    closeSync(fdRoot)
 }

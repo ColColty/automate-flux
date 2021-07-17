@@ -43,6 +43,14 @@ export default class ReducerController extends AbstractFluxController {
         return super.createFile(modelName, fluxExtension)
     }
 
+    public getReducerName(): string {
+        return this.reducerName
+    }
+
+    public getStateName(): string {
+        return this.stateName
+    }
+
     public generateStateInterface(
         modelName: string,
         properties: ParsedProperty[]

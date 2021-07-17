@@ -6,6 +6,27 @@ import SagasController from '../Controllers/SagasController'
 import ServiceController from '../Controllers/ServiceController'
 import ParsedModel from '../Models/ParsedModel'
 
+function createRootFile(sagasController: SagasController): void {
+    let fdRoot = sagasController.createFile(rootFileName)
+
+    const rootData = readFileSync(fdRoot)
+
+    if (rootData.length) {
+        const dataString = rootData.toString()
+        closeSync(fdRoot)
+
+        fdRoot = sagasController.createFile(rootFileName)
+
+        ftruncateSync(fdRoot, 0)
+
+        sagasController.appendRootFile(fdRoot, dataString)
+    } else {
+        sagasController.generateSagaRootFile(fdRoot)
+    }
+
+    closeSync(fdRoot)
+}
+
 export default function createSagas(
     actionTypeController: ActionTypeController,
     actionCreatorController: ActionCreatorController,
@@ -45,26 +66,9 @@ export default function createSagas(
         ])
 
         sagasController.writeFile(fd)
+
+        createRootFile(sagasController)
     }
 
     closeSync(fd)
-
-    let fdRoot = sagasController.createFile(rootFileName)
-
-    const rootData = readFileSync(fdRoot)
-
-    if (rootData.length) {
-        const dataString = rootData.toString()
-        closeSync(fdRoot)
-
-        fdRoot = sagasController.createFile(rootFileName)
-
-        ftruncateSync(fdRoot, 0)
-
-        sagasController.appendRootFile(fdRoot, dataString)
-    } else {
-        sagasController.generateSagaRootFile(fdRoot)
-    }
-
-    closeSync(fdRoot)
 }

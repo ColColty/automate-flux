@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from 'fs'
+import { writeFileSync } from 'fs'
 import { SagasFolder } from '../Constants/FolderConstants'
 import { fileNameExtension } from '../Constants/SagasConstants'
 import ParsedProperty from '../Models/ParsedProperty'
@@ -126,9 +126,10 @@ export default class SagasController extends AbstractFluxController {
         fd: number,
         sagaWatcher: string,
         sagaFunction: string,
-        serviceController: ServiceController
+        serviceController: ServiceController,
+        sagaData: string
     ): void {
-        let rootLines = readFileSync(fd).toString().split('\n')
+        let rootLines = sagaData.split('\n')
         let inSagaYields = false
 
         rootLines = rootLines.map((el) => {
