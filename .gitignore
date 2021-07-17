@@ -14,6 +14,8 @@ yarn.lock
 out/
 build/
 
+*.vsix
+
 # Runtime data
 pids
 *.pid
