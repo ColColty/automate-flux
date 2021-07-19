@@ -1,4 +1,3 @@
-import { fileNameExtension } from '../Constants/ActionCreatorConstants'
 import { ActionCreatorsFolder } from '../Constants/FolderConstants'
 import ParsedProperty from '../Models/ParsedProperty'
 import {
@@ -8,8 +7,11 @@ import {
 } from '../Utils/utils'
 import AbstractFluxController from './AbstractFluxController'
 
+export const fileNameExtension = 'ActionCreator'
+
 export default class ActionCreatorController extends AbstractFluxController {
     private actionCreatorNames: string[]
+
     constructor(filePath: string) {
         super(ActionCreatorsFolder, filePath)
 

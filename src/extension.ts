@@ -21,7 +21,7 @@ export function activate(context: vscode.ExtensionContext): void {
             // Display a message box to the user
 
             const editor = vscode.window.activeTextEditor
-            console.log(editor)
+
             if (editor) {
                 const document = editor.document
                 const selection = editor.selection
@@ -34,9 +34,9 @@ export function activate(context: vscode.ExtensionContext): void {
                 }
 
                 const model = document.getText(selection)
-                console.log(model)
+
                 const parsedModel = modelParsing(model)
-                console.log(parsedModel, fileWatcher)
+
                 fluxCreator(fileWatcher, parsedModel)
             }
         }

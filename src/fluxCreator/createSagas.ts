@@ -1,8 +1,7 @@
 import { closeSync, ftruncateSync, readFileSync } from 'fs'
-import { rootFileName } from '../Constants/SagasConstants'
 import ActionCreatorController from '../Controllers/ActionCreatorController'
 import ActionTypeController from '../Controllers/ActionTypeController'
-import SagasController from '../Controllers/SagasController'
+import SagasController, { rootFileName } from '../Controllers/SagasController'
 import ServiceController from '../Controllers/ServiceController'
 import ParsedModel from '../Models/ParsedModel'
 

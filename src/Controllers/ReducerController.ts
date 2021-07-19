@@ -1,6 +1,5 @@
 import { readFileSync, writeFileSync } from 'fs'
 import { ReducersFolder } from '../Constants/FolderConstants'
-import { fileNameExtension } from '../Constants/ReducerConstants'
 import ParsedProperty from '../Models/ParsedProperty'
 import {
     capitalize,
@@ -10,6 +9,9 @@ import {
 } from '../Utils/utils'
 import AbstractFluxController from './AbstractFluxController'
 import ActionTypeController from './ActionTypeController'
+
+export const fileNameExtension = 'Reducer'
+export const rootFileName = 'Root'
 
 export default class ReducerController extends AbstractFluxController {
     private stateName: string

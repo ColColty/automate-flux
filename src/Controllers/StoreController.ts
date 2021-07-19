@@ -1,9 +1,11 @@
 import { writeFileSync } from 'fs'
 import { StoreFolder } from '../Constants/FolderConstants'
-import { fileNameExtension } from '../Constants/StoreConstants'
 import { toCamelCase } from '../Utils/utils'
 import AbstractFluxController from './AbstractFluxController'
 import ReducerController from './ReducerController'
+
+export const fileNameExtension = 'Store'
+export const fileNameAppend = 'configure'
 
 export default class StoreController extends AbstractFluxController {
     constructor(filePath: string) {

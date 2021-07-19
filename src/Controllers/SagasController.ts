@@ -1,6 +1,5 @@
 import { writeFileSync } from 'fs'
 import { SagasFolder } from '../Constants/FolderConstants'
-import { fileNameExtension } from '../Constants/SagasConstants'
 import ParsedProperty from '../Models/ParsedProperty'
 import {
     capitalize,
@@ -11,6 +10,9 @@ import AbstractFluxController from './AbstractFluxController'
 import ActionCreatorController from './ActionCreatorController'
 import ActionTypeController from './ActionTypeController'
 import ServiceController from './ServiceController'
+
+export const fileNameExtension = 'Sagas'
+export const rootFileName = 'Root'
 
 export default class SagasController extends AbstractFluxController {
     private sagaMainFunction: string

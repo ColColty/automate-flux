@@ -1,7 +1,8 @@
 import { closeSync, ftruncateSync, readFileSync } from 'fs'
-import { rootFileName } from '../Constants/ReducerConstants'
 import ActionTypeController from '../Controllers/ActionTypeController'
-import ReducerController from '../Controllers/ReducerController'
+import ReducerController, {
+    rootFileName,
+} from '../Controllers/ReducerController'
 import ParsedModel from '../Models/ParsedModel'
 import ParsedProperty from '../Models/ParsedProperty'
 

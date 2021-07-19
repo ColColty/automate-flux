@@ -1,7 +1,6 @@
 import { closeSync, ftruncateSync, readFileSync } from 'fs'
-import { fileNameAppend } from '../Constants/StoreConstants'
 import ReducerController from '../Controllers/ReducerController'
-import StoreController from '../Controllers/StoreController'
+import StoreController, { fileNameAppend } from '../Controllers/StoreController'
 import ParsedModel from '../Models/ParsedModel'
 
 export default function createStore(
