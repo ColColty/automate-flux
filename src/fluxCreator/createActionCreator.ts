@@ -32,8 +32,12 @@ export default function createActionCreator(
                 actionTypeController.getActionTypeInterfacesNames()[i],
                 el,
                 actionTypeController.getActionTypeIdentifiers()[i],
-                properties[i].sort(
-                    (a, b) => (a.optional && !b.optional && -1) || 1
+                properties[i].sort((a, b) =>
+                    a.optional && !b.optional
+                        ? -1
+                        : a.optional && b.optional
+                            ? 0
+                            : 1
                 )
             )
         })
@@ -50,8 +54,12 @@ export default function createActionCreator(
                 actionTypeController.getActionTypeInterfacesNames()[i],
                 el,
                 actionTypeController.getActionTypeIdentifiers()[i],
-                properties[i].sort(
-                    (a, b) => (a.optional && !b.optional && -1) || 1
+                properties[i].sort((a, b) =>
+                    a.optional && !b.optional
+                        ? -1
+                        : a.optional && b.optional
+                            ? 0
+                            : 1
                 )
             )
         })
