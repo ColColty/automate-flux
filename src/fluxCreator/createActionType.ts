@@ -9,15 +9,42 @@ export default function createActionType(
     actionTypeController: ActionTypeController,
     parsedModel: ParsedModel
 ): void {
-    const fd = actionTypeController.createFile(parsedModel.interfaceName)
+    let fd = actionTypeController.createFile(parsedModel.interfaceName)
 
     const actionName =
-        'ADD' +
+        parsedModel.actionName +
         camelToSnakeCase(capitalize(parsedModel.interfaceName)).toUpperCase()
     const data = fs.readFileSync(fd)
 
     if (data.length) {
-        // TODO Append to file
+        const dataString = data.toString()
+        fs.closeSync(fd)
+
+        fd = actionTypeController.createFile(parsedModel.interfaceName)
+
+        fs.ftruncateSync(fd, 0)
+
+        actionTypeController.addLine('\n')
+
+        actionTypeController.addActionType(
+            parsedModel.interfaceName,
+            actionName,
+            parsedModel.propertiesSend || []
+        )
+        actionTypeController.addActionType(
+            parsedModel.interfaceName,
+            actionName,
+            parsedModel.propertiesSuccess || [],
+            true
+        )
+        actionTypeController.addActionType(
+            parsedModel.interfaceName,
+            actionName,
+            errorProperties,
+            false
+        )
+
+        actionTypeController.appendActionTypes(fd, dataString)
     } else {
         actionTypeController.addLine(
             generateModelImport(parsedModel.interfaceName)

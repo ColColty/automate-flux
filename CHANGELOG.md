@@ -6,4 +6,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
-- Initial release
+## [0.1.0] - 20-07-2021
+
+### Added
+
+- Added command to create all the flux elements from a model
+- Possiblity to append to current generated files

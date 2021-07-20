@@ -1,13 +1,12 @@
-import { fileNameExtension } from '../Constants/ActionTypeConstants'
-import {
-    FailureAppendType,
-    ModelActionType,
-    SuccessAppendType,
-} from '../Constants/ActionTypeConstants'
+import { writeFileSync } from 'fs'
 import { ActionTypesFolder } from '../Constants/FolderConstants'
 import ParsedProperty from '../Models/ParsedProperty'
 import { capitalize, propertiesToInterface, toCamelCase } from '../Utils/utils'
 import AbstractFluxController from './AbstractFluxController'
+
+export const fileNameExtension = 'ActionType'
+export const SuccessAppendType = '_SUCCESS'
+export const FailureAppendType = '_FAILURE'
 
 export default class ActionTypeController extends AbstractFluxController {
     private actionTypeInterfacesNames: string[]
@@ -47,6 +46,19 @@ export default class ActionTypeController extends AbstractFluxController {
         return this.actionTypeInterfacesNames
     }
 
+    private modelActionType = (
+        modelName: string,
+        actionType: string,
+        isSuccess?: boolean
+    ): string =>
+        `${modelName}ActionTypes/${actionType.toUpperCase()}${
+            isSuccess !== undefined
+                ? isSuccess
+                    ? SuccessAppendType
+                    : FailureAppendType
+                : ''
+        }`
+
     public addActionType(
         modelName: string,
         actionType: string,
@@ -69,7 +81,7 @@ export default class ActionTypeController extends AbstractFluxController {
             actionTypeVarName.toLowerCase()
         )}Action`
 
-        const actionTypeLine = `export const ${actionTypeVarName} = '${ModelActionType(
+        const actionTypeLine = `export const ${actionTypeVarName} = '${this.modelActionType(
             modelName,
             actionType,
             isSuccess
@@ -99,6 +111,20 @@ export default class ActionTypeController extends AbstractFluxController {
         })
 
         this.lines.push(exportActionTypes.join('\n'))
+    }
+
+    public appendActionTypes(fd: number, fileData: string): void {
+        let lines = fileData.split('\n')
+
+        lines = lines.map((el) => {
+            if (el.match(/^export type (\w+) =$/)) {
+                return this.lines.join('\n') + '\n' + el
+            }
+
+            return el
+        })
+
+        writeFileSync(fd, lines.join('\n'))
     }
 
     public reset(): void {

@@ -1,8 +1,7 @@
 import { closeSync, ftruncateSync, readFileSync } from 'fs'
-import { rootFileName } from '../Constants/SagasConstants'
 import ActionCreatorController from '../Controllers/ActionCreatorController'
 import ActionTypeController from '../Controllers/ActionTypeController'
-import SagasController from '../Controllers/SagasController'
+import SagasController, { rootFileName } from '../Controllers/SagasController'
 import ServiceController from '../Controllers/ServiceController'
 import ParsedModel from '../Models/ParsedModel'
 
@@ -34,12 +33,37 @@ export default function createSagas(
     sagasController: SagasController,
     parsedModel: ParsedModel
 ): void {
-    const fd = sagasController.createFile(parsedModel.interfaceName)
+    let fd = sagasController.createFile(parsedModel.interfaceName)
 
     const data = readFileSync(fd)
 
     if (data.length) {
-        // TODO Append to file
+        const dataString = data.toString()
+        closeSync(fd)
+
+        fd = sagasController.createFile(parsedModel.interfaceName)
+
+        ftruncateSync(fd, 0)
+
+        const sagaFunction = sagasController.generateSagaFunction(
+            actionTypeController,
+            parsedModel.propertiesSend || [],
+            parsedModel.propertiesSuccess || [],
+            serviceController
+        )
+
+        const sagaWatcher = sagasController.generateSagaWatcher(
+            sagaFunction.sagaFunctionName,
+            actionTypeController.getActionTypeNames()[0]
+        )
+
+        sagasController.appendSagaFile(
+            fd,
+            sagaWatcher,
+            sagaFunction.content,
+            serviceController,
+            dataString
+        )
     } else {
         sagasController.generateSagaImports(
             actionTypeController,

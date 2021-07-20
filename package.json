@@ -1,9 +1,10 @@
 {
   "name": "automate-flux",
   "displayName": "Automate Flux Architecture",
-  "description": "Automate teh flux architecture to auto generate actions and reducers",
-  "version": "0.0.1",
+  "description": "Automate the flux architecture to auto generate actions, reducers, sagas and services",
+  "version": "0.1.0",
   "publisher": "colcolt",
+  "icon": "./image/automate-flux.png",
   "repository": {
     "url": "https://github.com/ColColty/automate-flux"
   },
@@ -15,20 +16,14 @@
   ],
   "activationEvents": [
     "onCommand:automate-flux.generate-flux",
-    "onCommand:automate-flux.generate-action",
     "onStartupFinished"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [{
-        "command": "automate-flux.generate-flux",
-        "title": "Automate flux: Generate flux from Model"
-      },
-      {
-        "command": "automate-flux.generate-action",
-        "title": "Automate flux: Generate action"
-      }
-    ]
+      "command": "automate-flux.generate-flux",
+      "title": "Automate flux: Generate flux from Model"
+    }]
   },
   "scripts": {
     "compile": "tsc -p ./",

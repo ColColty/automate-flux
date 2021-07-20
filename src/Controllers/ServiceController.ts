@@ -1,8 +1,9 @@
 import { ServicesFolder } from '../Constants/FolderConstants'
-import { fileNameExtension } from '../Constants/ServiceConstants'
 import { capitalize } from '../Utils/utils'
 import AbstractFluxController from './AbstractFluxController'
 import ActionTypeController from './ActionTypeController'
+
+export const fileNameExtension = 'Service'
 
 export default class ServiceController extends AbstractFluxController {
     private serviceName: string

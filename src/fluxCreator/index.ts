@@ -44,8 +44,14 @@ export default function fluxCreator(
         parsedModel.apiURL = await vscode.window.showInputBox({
             title: 'URL called by the service, if there is parameters, unse ${params.<name of the parameter>}',
         })
-        parsedModel.apiVerb = await vscode.window.showInputBox({
-            title: 'API verb of the url',
+        parsedModel.apiVerb = await vscode.window.showQuickPick(
+            ['post', 'get', 'put', 'delete', 'patch'],
+            {
+                title: 'API verb of the url',
+            }
+        )
+        parsedModel.actionName = await vscode.window.showInputBox({
+            title: 'Action name',
         })
 
         const actionTypeController =
