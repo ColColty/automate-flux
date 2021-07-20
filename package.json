@@ -2,7 +2,7 @@
   "name": "automate-flux",
   "displayName": "Automate Flux Architecture",
   "description": "Automate the flux architecture to auto generate actions, reducers, sagas and services",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "colcolt",
   "icon": "image/automate-flux.png",
   "repository": {
