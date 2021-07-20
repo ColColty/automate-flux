@@ -4,7 +4,7 @@
   "description": "Automate the flux architecture to auto generate actions, reducers, sagas and services",
   "version": "0.1.0",
   "publisher": "colcolt",
-  "icon": "./image/automate-flux.png",
+  "icon": "image/automate-flux.png",
   "repository": {
     "url": "https://github.com/ColColty/automate-flux"
   },
