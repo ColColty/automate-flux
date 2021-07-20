@@ -4,7 +4,6 @@ import * as vscode from 'vscode'
 export function toCamelCase(str: string): string {
     return str
         .replace(/(?:^\w|[A-Z]|\b\w|_\w)/g, function (word, index) {
-            console.log(word, index)
             return index === 0 ? word.toLowerCase() : word.toUpperCase()
         })
         .replace(/[\s_]+/g, '')
