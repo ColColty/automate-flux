@@ -7,4 +7,5 @@ export default interface ParsedModel {
     propertiesSuccess?: ParsedProperty[] | undefined
     apiURL?: string
     apiVerb?: string
+    actionName?: string
 }

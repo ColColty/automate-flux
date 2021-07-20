@@ -17,7 +17,13 @@ export default function createService(
     }
 
     if (data.length) {
-        // TODO Append to file
+        serviceController.generateFetchFunction(
+            actionTypeController,
+            parsedModel.apiURL,
+            parsedModel.apiVerb
+        )
+
+        serviceController.appendFile(fd)
     } else {
         serviceController.generateServiceImports()
 

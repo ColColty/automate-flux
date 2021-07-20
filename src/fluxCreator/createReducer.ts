@@ -62,7 +62,15 @@ export default function createReducer(
     ]
 
     if (data.length) {
-        // TODO Append to file
+        const reducers: string[] = []
+
+        actionTypeController.getActionTypeNames().forEach((el, i) => {
+            reducers.push(
+                reducerController.generateReducer(el, allProperties[i])
+            )
+        })
+
+        reducerController.appendReducers(fd, reducers)
     } else {
         reducerController.generateImports(
             actionTypeController,
