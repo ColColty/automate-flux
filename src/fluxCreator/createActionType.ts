@@ -12,7 +12,7 @@ export default function createActionType(
     let fd = actionTypeController.createFile(parsedModel.interfaceName)
 
     const actionName =
-        parsedModel.actionName +
+        camelToSnakeCase(parsedModel.actionName || 'ADD').toUpperCase() +
         camelToSnakeCase(capitalize(parsedModel.interfaceName)).toUpperCase()
     const data = fs.readFileSync(fd)
 

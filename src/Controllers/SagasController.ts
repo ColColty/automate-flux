@@ -99,7 +99,7 @@ export default class SagasController extends AbstractFluxController {
     const params = {\n${propertiesToReturnAction(propertiesSend, '        ')}\n\
     }\n\n\
     try {\n\
-        const { data } = yield call(${serviceController.getServiceName()}, params)\n\\n\
+        const { data } = yield call(${serviceController.getServiceName()}, params)\n\n\
         yield put(actionCreators.${
     actionTypeController.getActionTypeIdentifiers()[0]
 }Success(${propertiesSuccess
