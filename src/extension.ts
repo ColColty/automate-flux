@@ -33,12 +33,5 @@ export function activate(context: vscode.ExtensionContext): void {
         }
     )
 
-    const generateActions = vscode.commands.registerCommand(
-        'automate-flux.generate-action',
-        () => {
-            // const fileWatcher = new FileWatcher()
-        }
-    )
-
-    context.subscriptions.push(generateFlux, generateActions)
+    context.subscriptions.push(generateFlux)
 }
