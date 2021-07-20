@@ -193,5 +193,7 @@ export default class ReducerController extends AbstractFluxController {
     public reset(): void {
         this.stateName = ''
         this.reducerName = ''
+
+        super.reset()
     }
 }

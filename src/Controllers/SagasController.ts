@@ -30,6 +30,10 @@ export default class SagasController extends AbstractFluxController {
         return super.createFile(modelName, fluxExtension)
     }
 
+    public serviceImports(serviceName: string): string {
+        return `    ${serviceName},`
+    }
+
     public generateSagaImports(
         actionTypeController: ActionTypeController,
         actionCreatorController: ActionCreatorController,
@@ -39,13 +43,15 @@ export default class SagasController extends AbstractFluxController {
             'import { put, call, all, fork, takeLatest } from \'redux-saga/effects\''
         const actionCreatorImport = `import * as actionCreators from '@/${actionCreatorController.getFolderName()}/${actionCreatorController
             .getFileName()
-            .replace('.ts', '')}'`
+            .replace(/\.ts$/, '')}'`
         const actionTypeImport = `import * as actionTypes from '@/${actionTypeController.getFolderName()}/${actionTypeController
             .getFileName()
-            .replace('.ts', '')}'`
-        const serviceImport = `import {\n${serviceController.getServiceName()},\n} from '@/${serviceController.getFolderName()}/${serviceController
+            .replace(/\.ts$/, '')}'`
+        const serviceImport = `import {\n${this.serviceImports(
+            serviceController.getServiceName()
+        )}\n} from '@/${serviceController.getFolderName()}/${serviceController
             .getFileName()
-            .replace('.ts', '')}'`
+            .replace(/\.ts$/, '')}'`
 
         // TODO Set this variable to be configurable by the user
         const errorHandlerImport =
@@ -91,10 +97,9 @@ export default class SagasController extends AbstractFluxController {
         const sagaFunction = `function* ${sagaFunctionName}({\n${params}\n\
 }: actionTypes.${actionTypeController.getActionTypeInterfacesNames()[0]}) {\n\
     const params = {\n${propertiesToReturnAction(propertiesSend, '        ')}\n\
-    }\n\
+    }\n\n\
     try {\n\
-        const { data } = yield call(${serviceController.getServiceName()}, params)\n\
-        \n\
+        const { data } = yield call(${serviceController.getServiceName()}, params)\n\\n\
         yield put(actionCreators.${
     actionTypeController.getActionTypeIdentifiers()[0]
 }Success(${propertiesSuccess

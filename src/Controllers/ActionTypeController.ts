@@ -1,3 +1,4 @@
+import { writeFileSync } from 'fs'
 import { ActionTypesFolder } from '../Constants/FolderConstants'
 import ParsedProperty from '../Models/ParsedProperty'
 import { capitalize, propertiesToInterface, toCamelCase } from '../Utils/utils'
@@ -110,6 +111,20 @@ export default class ActionTypeController extends AbstractFluxController {
         })
 
         this.lines.push(exportActionTypes.join('\n'))
+    }
+
+    public appendActionTypes(fd: number, fileData: string): void {
+        let lines = fileData.split('\n')
+
+        lines = lines.map((el) => {
+            if (el.match(/^export type (\w+) =$/)) {
+                return this.lines.join('\n') + '\n' + el
+            }
+
+            return el
+        })
+
+        writeFileSync(fd, lines.join('\n'))
     }
 
     public reset(): void {
